@@ -45,11 +45,11 @@ try {
         $params[] = $status_filter;
     }
     if ($date_from) {
-        $conditions[] = "DATE(t.transaction_date) >= ?";
+        $conditions[] = "DATE(t.created_at) >= ?";
         $params[] = $date_from;
     }
     if ($date_to) {
-        $conditions[] = "DATE(t.transaction_date) <= ?";
+        $conditions[] = "DATE(t.created_at) <= ?";
         $params[] = $date_to;
     }
     if ($search) {
@@ -74,7 +74,7 @@ try {
               FROM transactions t 
               LEFT JOIN users u ON t.user_id = u.id 
               $whereClause 
-              ORDER BY t.transaction_date DESC 
+              ORDER BY t.created_at DESC 
               LIMIT $limit OFFSET $offset";
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
@@ -155,7 +155,7 @@ include '../includes/header.php';
                         <tr>
                             <td><?= $transaction['id'] ?></td>
                             <td><?= htmlspecialchars($transaction['username']) ?></td>
-                            <td><?= date('d/m/Y H:i', strtotime($transaction['transaction_date'])) ?></td>
+                            <td><?= date('d/m/Y H:i', strtotime($transaction['created_at'])) ?></td>
                             <td><?= $transaction['item_count'] ?></td>
                             <td>Rp <?= number_format($transaction['total_amount'],0,',','.') ?></td>
                             <td>

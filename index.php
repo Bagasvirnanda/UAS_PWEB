@@ -43,7 +43,7 @@ try {
     // Total transactions today
     $stmt = $pdo->prepare("SELECT COUNT(*) as total, COALESCE(SUM(total_amount), 0) as amount 
                         FROM transactions 
-                        WHERE DATE(transaction_date) = CURDATE()");
+                        WHERE DATE(created_at) = CURDATE()");
     $stmt->execute();
     $todayTransactions = $stmt->fetch();
 
