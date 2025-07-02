@@ -74,22 +74,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'delete':
                 $id = $_POST['category_id'] ?? '';
                 try {
-                    // Check if category has products
-                    $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM products WHERE category_id = ?");
-                    $stmt->execute([$id]);
-                    $productCount = $stmt->fetch()['count'];
-
-                    if ($productCount > 0) {
-                        $error = 'Tidak dapat menghapus kategori yang masih memiliki produk';
+                    // Delete category directly - CASCADE will set products category_id to NULL
+                    $stmt = $pdo->prepare("DELETE FROM categories WHERE id = ?");
+                    if ($stmt->execute([$id])) {
+                        $success = 'Kategori berhasil dihapus (produk terkait akan tanpa kategori)';
+                        // Log activity
+                        logUserActivity($_SESSION['user_id'], 'Menghapus kategori ID: ' . $id);
                     } else {
-                        $stmt = $pdo->prepare("DELETE FROM categories WHERE id = ?");
-                        if ($stmt->execute([$id])) {
-                            $success = 'Kategori berhasil dihapus';
-                            // Log activity
-                            logUserActivity($_SESSION['user_id'], 'Menghapus kategori ID: ' . $id);
-                        } else {
-                            $error = 'Gagal menghapus kategori';
-                        }
+                        $error = 'Gagal menghapus kategori';
                     }
                 } catch(PDOException $e) {
                     error_log('Error deleting category: ' . $e->getMessage());

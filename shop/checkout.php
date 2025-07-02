@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
         
         // Create transaction
-        $stmt = $pdo->prepare("INSERT INTO transactions (user_id, total_amount, status, transaction_date) VALUES (?, ?, 'pending', NOW())");
+        $stmt = $pdo->prepare("INSERT INTO transactions (user_id, total_amount, status, created_at) VALUES (?, ?, 'pending', NOW())");
         $stmt->execute([$_SESSION['user_id'], $total]);
         $transaction_id = $pdo->lastInsertId();
         

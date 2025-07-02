@@ -28,12 +28,12 @@ if ($status) {
 }
 
 if ($date_from) {
-    $conditions[] = "DATE(transaction_date) >= ?";
+    $conditions[] = "DATE(created_at) >= ?";
     $params[] = $date_from;
 }
 
 if ($date_to) {
-    $conditions[] = "DATE(transaction_date) <= ?";
+    $conditions[] = "DATE(created_at) <= ?";
     $params[] = $date_to;
 }
 
@@ -54,7 +54,7 @@ try {
 try {
     $sql = "SELECT * FROM transactions 
            $where_clause 
-           ORDER BY transaction_date DESC 
+           ORDER BY created_at DESC 
            LIMIT ? OFFSET ?";
     $params[] = $limit;
     $params[] = $offset;
@@ -137,7 +137,7 @@ include 'includes/header.php';
                         <?php foreach ($transactions as $transaction): ?>
                             <tr>
                                 <td>#<?php echo str_pad($transaction['id'], 8, '0', STR_PAD_LEFT); ?></td>
-                                <td><?php echo date('d/m/Y H:i', strtotime($transaction['transaction_date'])); ?></td>
+                                <td><?php echo date('d/m/Y H:i', strtotime($transaction['created_at'])); ?></td>
                                 <td>Rp <?php echo number_format($transaction['total_amount'], 0, ',', '.'); ?></td>
                                 <td>
                                     <span class="badge <?php 
@@ -236,7 +236,7 @@ include 'includes/header.php';
                                                 </p>
                                                 <p class="mb-0">
                                                     <strong>Tanggal Transaksi:</strong>
-                                                    <?php echo date('d/m/Y H:i', strtotime($transaction['transaction_date'])); ?>
+                                                    <?php echo date('d/m/Y H:i', strtotime($transaction['created_at'])); ?>
                                                 </p>
                                             </div>
                                         </div>

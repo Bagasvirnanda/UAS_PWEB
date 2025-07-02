@@ -124,20 +124,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'delete':
                 $id = $_POST['product_id'] ?? '';
                 try {
-                    // Check if product is used in any transaction
-                    $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM transaction_items WHERE product_id = ?");
-                    $stmt->execute([$id]);
-                    $transactionCount = $stmt->fetch()['count'];
-
-                    if ($transactionCount > 0) {
-                        $error = 'Produk tidak dapat dihapus karena sudah digunakan dalam transaksi';
+                    // Delete product directly - CASCADE DELETE will handle related records
+                    $stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
+                    if ($stmt->execute([$id])) {
+                        $success = 'Produk berhasil dihapus (termasuk data terkait)';
                     } else {
-                        $stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
-                        if ($stmt->execute([$id])) {
-                            $success = 'Produk berhasil dihapus';
-                        } else {
-                            $error = 'Gagal menghapus produk';
-                        }
+                        $error = 'Gagal menghapus produk';
                     }
                 } catch(PDOException $e) {
                     $error = 'Gagal menghapus produk';

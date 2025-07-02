@@ -22,7 +22,7 @@ try {
                                  SUM(CASE WHEN status = 'completed' THEN total_amount ELSE 0 END) as total_spent
                          FROM transactions 
                          WHERE user_id = ? 
-                         AND DATE(transaction_date) BETWEEN ? AND ?");
+                         AND DATE(created_at) BETWEEN ? AND ?");
     $stmt->execute([$user_id, $date_from, $date_to]);
     $summary = $stmt->fetch();
 
@@ -34,19 +34,19 @@ try {
                          JOIN transaction_items ti ON t.id = ti.transaction_id
                          JOIN products p ON ti.product_id = p.id
                          WHERE t.user_id = ? 
-                         AND DATE(t.transaction_date) BETWEEN ? AND ?
+                         AND DATE(t.created_at) BETWEEN ? AND ?
                          GROUP BY t.id
-                         ORDER BY t.transaction_date DESC
+                         ORDER BY t.created_at DESC
                          LIMIT 5");
     $stmt->execute([$user_id, $date_from, $date_to]);
     $recent_transactions = $stmt->fetchAll();
 
     // Monthly spending chart data
-    $stmt = $pdo->prepare("SELECT DATE_FORMAT(transaction_date, '%Y-%m') as month,
+    $stmt = $pdo->prepare("SELECT DATE_FORMAT(created_at, '%Y-%m') as month,
                                  SUM(CASE WHEN status = 'completed' THEN total_amount ELSE 0 END) as total
                          FROM transactions
                          WHERE user_id = ?
-                         AND DATE(transaction_date) BETWEEN DATE_SUB(?, INTERVAL 6 MONTH) AND ?
+                         AND DATE(created_at) BETWEEN DATE_SUB(?, INTERVAL 6 MONTH) AND ?
                          GROUP BY month
                          ORDER BY month");
     $stmt->execute([$user_id, $date_to, $date_to]);
@@ -61,7 +61,7 @@ try {
                          JOIN products p ON ti.product_id = p.id
                          WHERE t.user_id = ? 
                          AND t.status = 'completed'
-                         AND DATE(t.transaction_date) BETWEEN ? AND ?
+                         AND DATE(t.created_at) BETWEEN ? AND ?
                          GROUP BY p.id
                          ORDER BY total_quantity DESC
                          LIMIT 5");
@@ -205,7 +205,7 @@ include 'includes/header.php';
                         <?php foreach ($recent_transactions as $transaction): ?>
                             <tr>
                                 <td>#<?php echo str_pad($transaction['id'], 8, '0', STR_PAD_LEFT); ?></td>
-                                <td><?php echo date('d/m/Y H:i', strtotime($transaction['transaction_date'])); ?></td>
+                                <td><?php echo date('d/m/Y H:i', strtotime($transaction['created_at'])); ?></td>
                                 <td>
                                     <small><?php echo htmlspecialchars($transaction['items']); ?></small>
                                 </td>

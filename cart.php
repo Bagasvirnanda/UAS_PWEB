@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['checkout'])) {
             }
 
             // Create transaction
-            $stmt = $pdo->prepare("INSERT INTO transactions (user_id, total_amount, transaction_date, status) 
+            $stmt = $pdo->prepare("INSERT INTO transactions (user_id, total_amount, created_at, status) 
                                  VALUES (?, ?, NOW(), 'pending')");
             $stmt->execute([$user_id, $total_amount]);
             $transaction_id = $pdo->lastInsertId();
