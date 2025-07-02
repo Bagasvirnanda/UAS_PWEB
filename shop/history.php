@@ -23,7 +23,7 @@ try {
     $stmt = $pdo->prepare("SELECT *, (SELECT COUNT(*) FROM transaction_items WHERE transaction_id = transactions.id) as item_count 
                            FROM transactions 
                            WHERE user_id = ? 
-                           ORDER BY transaction_date DESC 
+                           ORDER BY created_at DESC 
                            LIMIT $limit OFFSET $offset");
     $stmt->execute([$_SESSION['user_id']]);
     $transactions = $stmt->fetchAll();
@@ -70,7 +70,7 @@ include '../includes/header.php';
                             <?php foreach($transactions as $transaction): ?>
                             <tr>
                                 <td>#<?php echo $transaction['id']; ?></td>
-                                <td><?php echo date('d/m/Y H:i', strtotime($transaction['transaction_date'])); ?></td>
+                                <td><?php echo date('d/m/Y H:i', strtotime($transaction['created_at'])); ?></td>
                                 <td><?php echo $transaction['item_count']; ?></td>
                                 <td>Rp <?php echo number_format($transaction['total_amount'], 0, ',', '.'); ?></td>
                                 <td>

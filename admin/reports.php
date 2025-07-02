@@ -15,13 +15,13 @@ try {
         case 'sales':
             // Daily sales for date range
             $stmt = $pdo->prepare("SELECT 
-                                    DATE(transaction_date) as date,
+                                    DATE(created_at) as date,
                                     COUNT(*) as total_transactions,
                                     SUM(total_amount) as total_sales
                                  FROM transactions
                                  WHERE status = 'completed'
-                                 AND DATE(transaction_date) BETWEEN ? AND ?
-                                 GROUP BY DATE(transaction_date)
+                                 AND DATE(created_at) BETWEEN ? AND ?
+                                 GROUP BY DATE(created_at)
                                  ORDER BY date");
             $stmt->execute([$date_from, $date_to]);
             $sales_data = $stmt->fetchAll();
@@ -41,7 +41,7 @@ try {
                                  JOIN products p ON ti.product_id = p.id
                                  JOIN transactions t ON ti.transaction_id = t.id
                                  WHERE t.status = 'completed'
-                                 AND DATE(t.transaction_date) BETWEEN ? AND ?
+                                 AND DATE(t.created_at) BETWEEN ? AND ?
                                  GROUP BY p.id, p.name
                                  ORDER BY total_quantity DESC
                                  LIMIT 10");
@@ -60,7 +60,7 @@ try {
                                  LEFT JOIN products p ON c.id = p.category_id
                                  LEFT JOIN transaction_items ti ON p.id = ti.product_id
                                  LEFT JOIN transactions t ON ti.transaction_id = t.id AND t.status = 'completed'
-                                 WHERE DATE(t.transaction_date) BETWEEN ? AND ?
+                                 WHERE DATE(t.created_at) BETWEEN ? AND ?
                                  GROUP BY c.id, c.name
                                  ORDER BY total_revenue DESC");
             $stmt->execute([$date_from, $date_to]);

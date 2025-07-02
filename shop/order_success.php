@@ -57,7 +57,7 @@ include '../includes/header.php';
                                 <dd class="col-sm-8">#<?php echo $transaction['id']; ?></dd>
                                 
                                 <dt class="col-sm-4">Tanggal:</dt>
-                                <dd class="col-sm-8"><?php echo date('d/m/Y H:i', strtotime($transaction['transaction_date'])); ?></dd>
+                                <dd class="col-sm-8"><?php echo date('d/m/Y H:i', strtotime($transaction['created_at'])); ?></dd>
                                 
                                 <dt class="col-sm-4">Status:</dt>
                                 <dd class="col-sm-8">

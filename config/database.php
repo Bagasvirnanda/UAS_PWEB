@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
 $dbname = 'bagas_db';
-$username = 'root';
-$password = '';
+$username = 'bagas_user';
+$password = 'bagas_password123';
 
 // Flag to track connection status
 $db_connection_error = '';
