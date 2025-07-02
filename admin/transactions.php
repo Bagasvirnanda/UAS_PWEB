@@ -30,6 +30,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
+// Handle delete request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_transaction') {
+    $transaction_id = $_POST['transaction_id'] ?? '';
+
+    try {
+        // With CASCADE DELETE, we only need to delete the transaction
+        // Transaction items will be automatically deleted
+        $stmt = $pdo->prepare("DELETE FROM transactions WHERE id = ?");
+        if ($stmt->execute([$transaction_id])) {
+            $success = 'Transaksi berhasil dihapus';
+        } else {
+            $error = 'Gagal menghapus transaksi';
+        }
+    } catch(PDOException $e) {
+        $error = 'Gagal menghapus transaksi: ' . $e->getMessage();
+    }
+}
+
 // Filter parameters
 $status_filter = isset($_GET['status']) ? $_GET['status'] : '';
 $date_from = isset($_GET['date_from']) ? $_GET['date_from'] : '';
@@ -174,6 +192,9 @@ include '../includes/header.php';
                                     <i class="bi bi-check-circle"></i>
                                 </button>
                                 <?php endif; ?>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTransactionModal<?= $transaction['id'] ?>">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -278,6 +299,42 @@ include '../includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
+
+            <!-- Delete Modal -->
+            <div class="modal fade" id="deleteTransactionModal<?= $transaction['id'] ?>" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Hapus Transaksi #<?= $transaction['id'] ?></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="action" value="delete_transaction">
+                                <input type="hidden" name="transaction_id" value="<?= $transaction['id'] ?>">
+                                <p class="text-danger">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    <strong>Peringatan!</strong>
+                                </p>
+                                <p>Anda yakin ingin menghapus transaksi ini?</p>
+                                <ul>
+                                    <li>ID Transaksi: #<?= $transaction['id'] ?></li>
+                                    <li>User: <?= htmlspecialchars($transaction['username']) ?></li>
+                                    <li>Total: Rp <?= number_format($transaction['total_amount'],0,',','.') ?></li>
+                                    <li>Status: <?= ucfirst($transaction['status']) ?></li>
+                                </ul>
+                                <p class="text-danger">
+                                    <small>Tindakan ini tidak dapat dibatalkan. Semua data transaksi dan item terkait akan dihapus secara permanen.</small>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-danger">Hapus Transaksi</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <?php endforeach; ?>
 
         </div>
