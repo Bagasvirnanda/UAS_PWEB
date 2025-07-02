@@ -2,6 +2,11 @@
 
 Dokumentasi ini menjelaskan struktur database untuk Sistem Manajemen Toko Online.
 
+## ERD 
+
+Berikut adalah diagram relasi antar tabel(ERD)
+![ER Diagram](../erd/erdiagram.png)
+
 ## Overview
 
 Database menggunakan MySQL/MariaDB dengan skema relasional yang terdiri dari beberapa tabel utama dan tabel pendukung.
