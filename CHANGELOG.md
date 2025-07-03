@@ -1,6 +1,28 @@
 # Changelog
 
-## [Unreleased] - 2025-07-02
+## [v3.0] - 2025-07-02 - Enhanced Session & Security Update
+
+### Added
+- **Enhanced Session Management**: New comprehensive session manager with security improvements
+- **Session Security Documentation**: Added detailed SESSION_MANAGEMENT.md guide
+- **HTTP-Only Cookies**: Protection against XSS attacks
+- **Session Regeneration**: Automatic session ID regeneration on login
+- **Favicon Support**: Added favicon.ico for better UI
+
+### Enhanced
+- **Database Security**: Updated to use dedicated `bagas_user` instead of root
+- **Session Timeout**: Configurable 24-minute session timeout
+- **Authentication Flow**: Improved login/logout process with better security
+- **Error Handling**: Enhanced error messages and user feedback
+
+### Files Added/Modified
+- `includes/session_manager.php` - New comprehensive session management
+- `docs/SESSION_MANAGEMENT.md` - Complete session security documentation
+- `auth/auth.php` - Enhanced authentication with session security
+- `config/database.php` - Updated to use dedicated database user
+- Multiple UI files - Improved user experience and security
+
+## [v2.0] - 2025-07-02 - Database CASCADE Implementation
 
 ### Fixed
 - **Database Configuration**: Fixed database connection issues by updating configuration to use proper MySQL user and credentials
@@ -13,6 +35,7 @@
 - **Missing Database Tables**: Added `user_activity_logs` table for tracking user activities
 - **Proper Foreign Key Constraints**: Updated all foreign key constraints with appropriate CASCADE and SET NULL rules
 - **Database Schema Improvements**: Enhanced database structure with proper relationships
+- **ERD Diagram**: Added visual database relationship diagram
 
 ### Changed
 - **Delete Operations**: Products, categories, and users can now be deleted with automatic cleanup of related records
@@ -32,6 +55,9 @@
 - `config/database.php` - Updated database credentials and connection handling
 - `admin/products.php` - Removed manual foreign key validation, enabled CASCADE DELETE
 - `admin/categories.php` - Removed manual foreign key validation, enabled CASCADE DELETE  
+- `admin/reports.php` - Enhanced reporting functionality
+- `admin/transactions.php` - Improved transaction management
+- `database/setup_database.sql` - Complete database schema with constraints
 - `index.php` - Fixed dashboard queries to use correct column names
 - Multiple files - Replaced `transaction_date` references with `created_at`
 
@@ -40,3 +66,5 @@
 - ✅ Verified CASCADE DELETE works for users with transactions, cart, and activity logs
 - ✅ Verified SET NULL works for categories with products
 - ✅ Confirmed no more "cannot delete due to foreign key constraint" errors
+- ✅ Session security and timeout functionality validated
+- ✅ Enhanced authentication flow tested

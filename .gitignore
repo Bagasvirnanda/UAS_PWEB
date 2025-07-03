@@ -1,0 +1,43 @@
+# Backup files
+*.backup
+*.bak
+
+# Environment files
+.env
+.env.local
+
+# Database credentials (jika ada)
+config/database_local.php
+
+# Log files
+*.log
+error.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# SSL certificates
+*.pem
+*.crt
+*.key
+
+# Cache files
+cache/
+temp/
+tmp/

@@ -1,5 +1,9 @@
 <?php
-// Set session cookie parameters before starting session (moved to session_manager.php)
+// Set session cookie parameters before starting session
+ini_set("session.cookie_samesite", "Lax");
+ini_set("session.cookie_secure", isset($_SERVER["HTTPS"]) ? "1" : "0");
+ini_set("session.cookie_httponly", "1");
+session_start();
 require_once __DIR__ . "/../includes/session_manager.php";
 require_once __DIR__ . '/../config/database.php';
 
